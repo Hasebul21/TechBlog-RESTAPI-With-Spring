@@ -25,6 +25,7 @@ public class User {
     private String email;
 
     @Column(nullable = false)
+    @Pattern(regexp ="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$")
     private String password;
 
 
