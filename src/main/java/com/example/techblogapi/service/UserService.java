@@ -5,7 +5,8 @@ import com.example.techblogapi.entity.User;
 import com.example.techblogapi.repository.UserRepository;
 import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.core.convert.ConverterNotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,63 +24,48 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<String> addUser(User user)  {
+    public User addUser(User user)   {
 
-        try {
-
-            userRepository.save(user);
-
-        }catch(Exception err){
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err.getMessage().toString());
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body("Sucessfully added entity");
+        return userRepository.save(user);
 
     }
 
-    public ResponseEntity<List<User>> getAllUser() {
+    public Iterable<User> getAllUser() {
 
-        List<User>allUser=new ArrayList<>();
-        userRepository.findAll().forEach(allUser::add);
-        return ResponseEntity.status(HttpStatus.OK).body(allUser);
+        return userRepository.findAll();
     }
 
-    public ResponseEntity<User> getSingleUser(int id) {
+    public Optional<User> getSingleUser(int id) {
 
         Optional<User> checkUser=userRepository.findById(id);
-        if(checkUser.isPresent()==false) {
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        User existingUser=checkUser.get();
-        return ResponseEntity.status(HttpStatus.OK).body(existingUser);
+        return checkUser;
 
     }
 
-    public ResponseEntity<String> updateUser(String email,User user) {
+    public Optional<User> getSingleUserByEmail(String email) {
 
-        if(userRepository.existsByEmail(email)){
-
-            Optional<User> checkUser=userRepository.findByEmail(email);
-            User newUser=checkUser.get();
-            newUser.setEmail(user.getEmail());
-            newUser.setPassword(user.getPassword());
-            userRepository.save(newUser);
-            return ResponseEntity.status(HttpStatus.OK).body("Sucessfully Updated");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email Doesnot Exist");
+        Optional<User> checkUser=userRepository.findByEmail(email);
+        return checkUser;
     }
 
-    public ResponseEntity<String> deleteUser(int id) {
+    public Optional<User> updateUser(String email,User user) {
 
-        try {
+        Optional<User> newUser=userRepository.findByEmail(email);
+        if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return null;
+        if(newUser.isPresent()){
 
-            userRepository.deleteById(id);
-
-        }catch(Exception err){
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err.getMessage().toString());
+            newUser.get().setEmail(user.getEmail());
+            newUser.get().setPassword(user.getPassword());
+            userRepository.save(newUser.get());
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Sucessfully Deleted entity");
+        return newUser;
+    }
+
+    public Optional<User> deleteUser(int id) {
+
+        Optional<User> newUser=userRepository.findById(id);
+        userRepository.deleteById(id);
+        return newUser;
+
     }
 }

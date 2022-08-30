@@ -1,11 +1,5 @@
 package com.example.techblogapi.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GeneratorType;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,7 +7,6 @@ import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Entity
-@Component
 public class User {
 
     @Id
@@ -25,11 +18,11 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    @Pattern(regexp ="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$")
+    @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,}")
     private String password;
 
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date CreatedDate=new Date(System.currentTimeMillis());
 
     public User() {
