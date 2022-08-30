@@ -24,11 +24,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User addUser(User user)   {
-
-        return userRepository.save(user);
-
-    }
 
     public Iterable<User> getAllUser() {
 
@@ -51,7 +46,7 @@ public class UserService {
     public Optional<User> updateUser(String email,User user) {
 
         Optional<User> newUser=userRepository.findByEmail(email);
-        if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return null;
+        if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return Optional.empty();
         if(newUser.isPresent()){
 
             newUser.get().setEmail(user.getEmail());
