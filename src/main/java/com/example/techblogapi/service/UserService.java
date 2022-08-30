@@ -33,7 +33,7 @@ public class UserService {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err.getMessage().toString());
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Sucessfully added entity");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Sucessfully added entity");
 
     }
 
@@ -52,7 +52,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         User existingUser=checkUser.get();
-        return ResponseEntity.status(HttpStatus.FOUND).body(existingUser);
+        return ResponseEntity.status(HttpStatus.OK).body(existingUser);
 
     }
 
@@ -78,7 +78,7 @@ public class UserService {
 
         }catch(Exception err){
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err.getMessage().toString());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err.getMessage().toString());
         }
         return ResponseEntity.status(HttpStatus.OK).body("Sucessfully Deleted entity");
     }
