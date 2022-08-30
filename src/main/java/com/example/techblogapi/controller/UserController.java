@@ -2,9 +2,9 @@ package com.example.techblogapi.controller;
 
 
 import com.example.techblogapi.entity.User;
-import com.example.techblogapi.repository.UserRepository;
 import com.example.techblogapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,40 +12,69 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(value = "/users")
 public class UserController {
 
      @Autowired
      private UserService userService;
 
+     @PostMapping
+     public ResponseEntity<User> addUser(@RequestBody User user)  {
 
-     @RequestMapping(method = RequestMethod.GET, value = "/users")
-     public ResponseEntity<List<User>> getAllUser() {
+          try {
 
-          return userService.getAllUser();
+               userService.addUser(user);
+
+          }catch(Exception err){
+
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+          }
+          return ResponseEntity.status(HttpStatus.CREATED).body(user);
      }
 
-     @RequestMapping(method = RequestMethod.GET, value = "/users/{id}")
+    @GetMapping
+     public ResponseEntity<Iterable<User>> getAllUser() {
+
+          return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUser());
+     }
+
+     @GetMapping("/{id}")
      public ResponseEntity<User> getSingleUser(@PathVariable int id) {
 
-          return userService.getSingleUser(id);
+          Optional<User> newUser=userService.getSingleUser(id);
+          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+          return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
      }
 
-     @RequestMapping(method = RequestMethod.POST,value = "/users")
-     public ResponseEntity<String> addUser(@RequestBody User user)  {
+     @GetMapping("/email/{email}")
+     public ResponseEntity<User> getSingleUserByEmail(@PathVariable String email) {
 
-          return userService.addUser(user);
+          Optional<User> newUser=userService.getSingleUserByEmail(email);
+          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+          return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
      }
 
-     @RequestMapping(method = RequestMethod.PUT,value = "/users/{email}")
-     public ResponseEntity<String> updateUser(@PathVariable String email,@RequestBody User user) {
 
-          return userService.updateUser(email,user);
+     @PutMapping("/{email}")
+     public ResponseEntity<User> updateUser(@PathVariable String email,@RequestBody User user) {
+
+          Optional<User> newUser=userService.updateUser(email,user);
+          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+          return ResponseEntity.status(HttpStatus.ACCEPTED).body(newUser.get());
      }
 
-     @RequestMapping(method = RequestMethod.DELETE,value = "/users")
-     public ResponseEntity<String> deleteUser(@RequestBody User user) {
+     @DeleteMapping
+     public ResponseEntity<User> deleteUser(@RequestParam("id") int id) {
 
-          return userService.deleteUser(user.getId());
+          try{
+
+              userService.deleteUser(id);
+              return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+          }
+          catch (Exception err){
+
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+          }
      }
 
 }
