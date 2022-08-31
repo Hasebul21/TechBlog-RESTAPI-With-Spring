@@ -23,13 +23,12 @@ public class UserController {
 
           try {
 
-               userService.addUser(user);
-
+              userService.addUser(user);
+              return ResponseEntity.status(HttpStatus.CREATED).body(user);
           }catch(Exception err){
 
                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
           }
-          return ResponseEntity.status(HttpStatus.CREATED).body(user);
      }
 
     @GetMapping
@@ -63,16 +62,14 @@ public class UserController {
           return ResponseEntity.status(HttpStatus.ACCEPTED).body(newUser.get());
      }
 
-     @DeleteMapping
-     public ResponseEntity<User> deleteUser(@RequestParam("id") int id) {
+     @DeleteMapping("/{id}")
+     public ResponseEntity<User> deleteUser(@PathVariable int id) {
 
           try{
-
               userService.deleteUser(id);
               return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
           }
           catch (Exception err){
-
               return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
           }
      }

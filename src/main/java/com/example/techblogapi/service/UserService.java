@@ -51,7 +51,7 @@ public class UserService {
     public Optional<User> updateUser(String email,User user) {
 
         Optional<User> newUser=userRepository.findByEmail(email);
-        if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return null;
+        if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return Optional.empty();
         if(newUser.isPresent()){
 
             newUser.get().setEmail(user.getEmail());
