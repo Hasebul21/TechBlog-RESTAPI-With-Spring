@@ -38,24 +38,19 @@ public class UserService {
 
     }
 
-    public Optional<User> getSingleUserByEmail(String email) {
+    public Optional<User> updateUser(int id,User user) {
 
-        Optional<User> checkUser=userRepository.findByEmail(email);
-        if(checkUser.isPresent()) return checkUser;
-        return Optional.empty();
-    }
+        Optional<User> newUser=userRepository.findById(id);
+        if(user.getEmail().isEmpty()||user.getPassword().isEmpty()||user.getName().isEmpty()||user.getPhone().isEmpty()) return Optional.empty();
 
-    public Optional<User> updateUser(String email,User user) {
-
-        Optional<User> newUser=userRepository.findByEmail(email);
-        if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return Optional.empty();
-        // User is trying to set email that already exist in our db.
         if(userRepository.findByEmail(user.getEmail()).isPresent()) return Optional.empty();
 
         if(newUser.isPresent()){
 
             newUser.get().setEmail(user.getEmail());
             newUser.get().setPassword(user.getPassword());
+            newUser.get().setName(user.getName());
+            newUser.get().setPhone(user.getPhone());
             userRepository.save(newUser.get());
             return newUser;
         }

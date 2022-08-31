@@ -31,20 +31,11 @@ public class UserController {
           return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
      }
 
-     @GetMapping("/email/{email}")
-     public ResponseEntity<User> getSingleUserByEmail(@PathVariable String email) {
+     @PutMapping("/{id}")
+     public ResponseEntity<User> updateUser(@PathVariable int id,@RequestBody User user) {
 
-          Optional<User> newUser=userService.getSingleUserByEmail(email);
-          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-          return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
-     }
-
-
-     @PutMapping("/{email}")
-     public ResponseEntity<User> updateUser(@PathVariable String email,@RequestBody User user) {
-
-          Optional<User> newUser=userService.updateUser(email,user);
-          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+          Optional<User> newUser=userService.updateUser(id,user);
+          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
           return ResponseEntity.status(HttpStatus.ACCEPTED).body(newUser.get());
      }
 
@@ -53,7 +44,7 @@ public class UserController {
 
         Optional<User> newUser=userService.deleteUser(id);
         if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(newUser.get());
+        return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
 
      }
 
