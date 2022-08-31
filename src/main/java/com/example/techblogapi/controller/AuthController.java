@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -16,7 +17,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody User user){
+    public ResponseEntity<? extends Object> signUp(@RequestBody User user){
 
         try {
 
@@ -24,7 +25,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 
         }catch(Exception err){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err.getMessage().toString());
         }
     }
 

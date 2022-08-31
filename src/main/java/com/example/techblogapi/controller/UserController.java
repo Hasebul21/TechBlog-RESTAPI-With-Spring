@@ -32,11 +32,17 @@ public class UserController {
      }
 
      @PutMapping("/{id}")
-     public ResponseEntity<User> updateUser(@PathVariable int id,@RequestBody User user) {
+     public ResponseEntity<? extends Object> updateUser(@PathVariable int id,@RequestBody User user) {
 
-          Optional<User> newUser=userService.updateUser(id,user);
-          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
-          return ResponseEntity.status(HttpStatus.ACCEPTED).body(newUser.get());
+          try{
+
+              Optional<User> newUser=userService.updateUser(id,user);
+              return ResponseEntity.status(HttpStatus.ACCEPTED).body(newUser.get());
+          }
+          catch (Exception err){
+
+              return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(err.getMessage().toString());
+          }
      }
 
      @DeleteMapping("/{id}")
