@@ -18,6 +18,16 @@ public class UserController {
      @Autowired
      private UserService userService;
 
+    @PostMapping
+    public ResponseEntity<User> addUser(@RequestBody User user)  {
+
+        try {
+            userService.addUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        }catch(Exception err){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 
     @GetMapping
      public ResponseEntity<Iterable<User>> getAllUser() {
@@ -50,16 +60,14 @@ public class UserController {
           return ResponseEntity.status(HttpStatus.ACCEPTED).body(newUser.get());
      }
 
-     @DeleteMapping
+     @DeleteMapping("/{id}")
      public ResponseEntity<User> deleteUser(@RequestParam("id") int id) {
 
           try{
-
               userService.deleteUser(id);
               return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
           }
           catch (Exception err){
-
               return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
           }
      }
