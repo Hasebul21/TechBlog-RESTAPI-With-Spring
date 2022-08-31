@@ -25,12 +25,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User addUser(User user)   {
-
-        return userRepository.save(user);
-
-    }
-
     public Iterable<User> getAllUser()  {
 
         return userRepository.findAll();
@@ -39,32 +33,39 @@ public class UserService {
     public Optional<User> getSingleUser(int id) {
 
         Optional<User> checkUser=userRepository.findById(id);
-        return checkUser;
+        if(checkUser.isPresent()) return checkUser;
+        return Optional.empty();
 
     }
 
     public Optional<User> getSingleUserByEmail(String email) {
 
         Optional<User> checkUser=userRepository.findByEmail(email);
-        return checkUser;
+        if(checkUser.isPresent()) return checkUser;
+        return Optional.empty();
     }
 
     public Optional<User> updateUser(String email,User user) {
 
         Optional<User> newUser=userRepository.findByEmail(email);
         if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return Optional.empty();
+        // User is trying to set email that already exist in our db.
+        if(userRepository.findByEmail(user.getEmail()).isPresent()) return Optional.empty();
+
         if(newUser.isPresent()){
 
             newUser.get().setEmail(user.getEmail());
             newUser.get().setPassword(user.getPassword());
             userRepository.save(newUser.get());
+            return newUser;
         }
-        return newUser;
+        return Optional.empty();
     }
 
     public Optional<User> deleteUser(int id) {
 
         Optional<User> newUser=userRepository.findById(id);
+        if(newUser.isEmpty()) return Optional.empty();
         userRepository.deleteById(id);
         return newUser;
 
