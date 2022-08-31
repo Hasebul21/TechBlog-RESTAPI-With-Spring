@@ -52,6 +52,8 @@ public class UserService {
 
         Optional<User> newUser=userRepository.findByEmail(email);
         if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return Optional.empty();
+        // User is trying to set email that already exist in our db.
+        if(userRepository.findByEmail(user.getEmail()).isPresent()) return Optional.empty();
         if(newUser.isPresent()){
 
             newUser.get().setEmail(user.getEmail());
