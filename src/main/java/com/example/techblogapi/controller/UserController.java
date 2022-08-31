@@ -16,7 +16,6 @@ public class UserController {
      @Autowired
      private UserService userService;
 
-
     @GetMapping
      public ResponseEntity<Iterable<User>> getAllUser() {
 
@@ -43,14 +42,17 @@ public class UserController {
 
               return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(err.getMessage().toString());
           }
+
      }
 
      @DeleteMapping("/{id}")
      public ResponseEntity<User> deleteUser(@PathVariable int id) {
 
+
         Optional<User> newUser=userService.deleteUser(id);
         if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
+
 
      }
 

@@ -21,11 +21,11 @@ public class User {
     @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,}")
     private String password;
 
-
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private String phone;
+
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date CreatedDate=new Date(System.currentTimeMillis());
@@ -78,6 +78,7 @@ public class User {
         this.phone = phone;
     }
 
+
     public String getPassword() {
 
         return password;
@@ -86,8 +87,4 @@ public class User {
 
         return CreatedDate;
     }
-
-
-
-
 }
