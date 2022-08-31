@@ -9,6 +9,7 @@ import java.util.Date;
 @Entity
 public class User {
 
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
@@ -21,6 +22,10 @@ public class User {
     @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,}")
     private String password;
 
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false)
+    private String phone;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date CreatedDate=new Date(System.currentTimeMillis());
@@ -64,6 +69,21 @@ public class User {
     public Date getCreatedDate() {
 
         return CreatedDate;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
 
