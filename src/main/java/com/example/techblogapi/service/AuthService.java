@@ -12,7 +12,7 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
-    public User signUp(User user)   {
+    public User signUp(User user)  {
 
         return userRepository.save(user);
     }

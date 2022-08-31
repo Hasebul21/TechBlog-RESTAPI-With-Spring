@@ -20,7 +20,6 @@ public class AuthController {
     public ResponseEntity<? extends Object> signUp(@RequestBody User user){
 
         try {
-
             User newUser=authService.signUp(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 

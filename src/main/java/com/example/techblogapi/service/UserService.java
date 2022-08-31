@@ -24,12 +24,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User addUser(User user)   {
-
-        return userRepository.save(user);
-
-    }
-
     public Iterable<User> getAllUser() {
 
         return userRepository.findAll();
@@ -38,22 +32,15 @@ public class UserService {
     public Optional<User> getSingleUser(int id) {
 
         Optional<User> checkUser=userRepository.findById(id);
+        if(checkUser.isEmpty()) return Optional.empty();
         return checkUser;
 
     }
 
-    public Optional<User> getSingleUserByEmail(String email) {
+    public Optional<User> updateUser(int id,User user) {
 
-        Optional<User> checkUser=userRepository.findByEmail(email);
-        return checkUser;
-    }
-
-    public Optional<User> updateUser(String email,User user) {
-
-        Optional<User> newUser=userRepository.findByEmail(email);
+        Optional<User> newUser=userRepository.findById(id);
         if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return Optional.empty();
-        // User is trying to set email that already exist in our db.
-        if(userRepository.findByEmail(user.getEmail()).isPresent()) return Optional.empty();
         if(newUser.isPresent()){
 
             newUser.get().setEmail(user.getEmail());
@@ -66,6 +53,7 @@ public class UserService {
     public Optional<User> deleteUser(int id) {
 
         Optional<User> newUser=userRepository.findById(id);
+        if(newUser.isEmpty()) return Optional.empty();
         userRepository.deleteById(id);
         return newUser;
 

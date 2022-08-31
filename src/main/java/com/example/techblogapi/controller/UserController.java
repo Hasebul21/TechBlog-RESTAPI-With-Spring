@@ -18,60 +18,40 @@ public class UserController {
      @Autowired
      private UserService userService;
 
-     @PostMapping
-     public ResponseEntity<User> addUser(@RequestBody User user)  {
 
-          try {
-
-              userService.addUser(user);
-              return ResponseEntity.status(HttpStatus.CREATED).body(user);
-          }catch(Exception err){
-
-               return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-          }
-     }
-
-    @GetMapping
+    @GetMapping("/")
      public ResponseEntity<Iterable<User>> getAllUser() {
 
           return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUser());
      }
 
      @GetMapping("/{id}")
-     public ResponseEntity<User> getSingleUser(@PathVariable int id) {
+     public ResponseEntity<? extends Object> getSingleUser(@PathVariable int id) {
 
           Optional<User> newUser=userService.getSingleUser(id);
           if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
           return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
      }
 
-     @GetMapping("/email/{email}")
-     public ResponseEntity<User> getSingleUserByEmail(@PathVariable String email) {
 
-          Optional<User> newUser=userService.getSingleUserByEmail(email);
-          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-          return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
-     }
+     @PutMapping("/{id}")
+     public ResponseEntity<? extends Object> updateUser(@PathVariable int id,@RequestBody User user) {
 
-
-     @PutMapping("/{email}")
-     public ResponseEntity<User> updateUser(@PathVariable String email,@RequestBody User user) {
-
-          Optional<User> newUser=userService.updateUser(email,user);
-          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-          return ResponseEntity.status(HttpStatus.ACCEPTED).body(newUser.get());
+          try{
+              Optional<User> newUser=userService.updateUser(id,user);
+              return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
+          }
+          catch (Exception err){
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err.getMessage().toString());
+          }
      }
 
      @DeleteMapping("/{id}")
-     public ResponseEntity<User> deleteUser(@PathVariable int id) {
+     public ResponseEntity<? extends Object> deleteUser(@PathVariable int id) {
 
-          try{
-              userService.deleteUser(id);
-              return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-          }
-          catch (Exception err){
-              return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-          }
+         Optional<User> newUser=userService.deleteUser(id);
+         if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+         return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
      }
 
 }
