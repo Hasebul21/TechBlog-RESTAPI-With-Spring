@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -17,15 +19,10 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<? extends Object> signUp(@RequestBody User user){
+    public ResponseEntity<? extends Object> signUp(@RequestBody User user) throws SQLIntegrityConstraintViolationException {
 
-        try {
             User newUser=authService.signUp(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-
-        }catch(Exception err){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err.getMessage().toString());
-        }
     }
 
     @PostMapping("/signin")
@@ -33,7 +30,8 @@ public class AuthController {
 
         Optional<User>newUser=authService.signIn(user);
         if(newUser.isPresent()) return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        throw new EntityNotFoundException("Invalid Password");
 
     }
 }
