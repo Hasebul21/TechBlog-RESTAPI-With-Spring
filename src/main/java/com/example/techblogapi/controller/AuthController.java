@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<User> signIn(@RequestBody User user){
+    public ResponseEntity<? extends Object> signIn(@RequestBody User user){
 
         Optional<User>newUser=authService.signIn(user);
         if(newUser.isPresent()) return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
