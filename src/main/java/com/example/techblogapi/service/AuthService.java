@@ -22,7 +22,8 @@ public class AuthService {
         String userEmail=user.getEmail();
         String userPassword=user.getPassword();
         Optional<User> newUser=userRepository.findByEmail(userEmail);
-        if(newUser.isPresent()&&newUser.get().getPassword().equals(userPassword)) return newUser;
+        if(newUser.isEmpty()) return Optional.empty();
+        if(newUser.get().getPassword().equals(userPassword)) return newUser;
         return Optional.empty();
 
     }

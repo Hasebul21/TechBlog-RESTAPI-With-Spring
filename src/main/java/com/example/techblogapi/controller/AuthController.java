@@ -33,7 +33,7 @@ public class AuthController {
 
         Optional<User>newUser=authService.signIn(user);
         if(newUser.isPresent()) return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
-        else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
     }
 }

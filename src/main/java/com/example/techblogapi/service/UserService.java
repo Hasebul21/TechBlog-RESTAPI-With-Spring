@@ -40,11 +40,13 @@ public class UserService {
     public Optional<User> updateUser(int id,User user) {
 
         Optional<User> newUser=userRepository.findById(id);
-        if(user.getEmail().isEmpty()||user.getPassword().isEmpty()) return Optional.empty();
+        if(user.getEmail().isBlank()||user.getPassword().isBlank()) return Optional.empty();
         if(newUser.isPresent()){
 
             newUser.get().setEmail(user.getEmail());
             newUser.get().setPassword(user.getPassword());
+            newUser.get().setName(user.getName());
+            newUser.get().setPhone(user.getPhone());
             userRepository.save(newUser.get());
         }
         return newUser;
