@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class UserController {
      public ResponseEntity<? extends Object> getSingleUser(@PathVariable int id) {
 
           Optional<User> newUser=userService.getSingleUser(id);
-          if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+          if(newUser.isEmpty()) throw new EntityNotFoundException("User Does not Exist");
           return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
      }
 
@@ -50,7 +51,7 @@ public class UserController {
      public ResponseEntity<? extends Object> deleteUser(@PathVariable int id) {
 
          Optional<User> newUser=userService.deleteUser(id);
-         if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+         if(newUser.isEmpty()) throw new EntityNotFoundException("User Does not Exist");
          return ResponseEntity.status(HttpStatus.OK).body(newUser.get());
      }
 

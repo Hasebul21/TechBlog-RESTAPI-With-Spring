@@ -5,6 +5,9 @@ import com.example.techblogapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Optional;
 
 @Service
@@ -12,7 +15,7 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
-    public User signUp(User user)  {
+    public User signUp(User user)  throws ConstraintViolationException {
 
         return userRepository.save(user);
     }
@@ -22,7 +25,7 @@ public class AuthService {
         String userEmail=user.getEmail();
         String userPassword=user.getPassword();
         Optional<User> newUser=userRepository.findByEmail(userEmail);
-        if(newUser.isEmpty()) return Optional.empty();
+        if(newUser.isEmpty()) throw new EntityNotFoundException("Invalid Email");
         if(newUser.get().getPassword().equals(userPassword)) return newUser;
         return Optional.empty();
 
