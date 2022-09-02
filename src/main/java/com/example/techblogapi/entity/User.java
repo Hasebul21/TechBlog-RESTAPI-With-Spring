@@ -3,6 +3,7 @@ package com.example.techblogapi.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 
@@ -14,17 +15,21 @@ public class User {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
+    @NotBlank(message = "Email may not be blank")
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",flags = Pattern.Flag.CASE_INSENSITIVE)
     private String email;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
+    @NotBlank(message = "Password may not be blank")
     @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,}")
     private String password;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
+    @NotBlank(message = "Name may not be blank")
     private String name;
-    @Column(nullable = false)
+   // @Column(nullable = false)
+    @NotBlank(message = "Phone may not be blank")
     private String phone;
 
     @Temporal(TemporalType.TIMESTAMP)

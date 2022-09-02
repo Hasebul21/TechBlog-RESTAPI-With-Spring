@@ -17,12 +17,22 @@ import java.sql.SQLIntegrityConstraintViolationException;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 
+    @ExceptionHandler(CustomException.class)
+    protected ResponseEntity<Object> handleCustomException(CustomException ex) {
+        ApiError apiError = new ApiError();
+        apiError.setMessage(ex.getMessage());
+        apiError.setStatus(ex.getStatus());
+        apiError.setDebugMessage("Bro I am in Custom Exception");
+        return new ResponseEntity<>(apiError,ex.getStatus());
+    }
+
 
     @ExceptionHandler(ConstraintViolationException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(ConstraintViolationException ex) {
+    protected ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
         ApiError apiError = new ApiError();
-        apiError.setMessage(ex.getMessage().toString());
+        apiError.setMessage(ex.getMessage());
         apiError.setStatus(HttpStatus.BAD_REQUEST);
+        apiError.setDebugMessage("Information can not be blank must be full filled under given constraint");
         return new ResponseEntity<>(apiError,HttpStatus.BAD_REQUEST);
     }
 
@@ -31,6 +41,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError();
         apiError.setMessage(ex.getMessage());
         apiError.setStatus(HttpStatus.NOT_ACCEPTABLE);
+        apiError.setDebugMessage("Email must be unique and must be full filled under given constraint");
         return new ResponseEntity<>(apiError,HttpStatus.NOT_ACCEPTABLE);
     }
 
@@ -39,6 +50,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError();
         apiError.setMessage(ex.getMessage());
         apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setDebugMessage("User does not exist or input type mismatch");
         return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
     }
+
+
 }

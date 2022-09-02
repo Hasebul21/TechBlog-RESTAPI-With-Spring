@@ -3,6 +3,7 @@ package com.example.techblogapi.service;
 
 import com.example.techblogapi.entity.User;
 import com.example.techblogapi.repository.UserRepository;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConverterNotFoundException;
@@ -39,10 +40,10 @@ public class UserService {
 
     }
 
-    public Optional<User> updateUser(int id,User user) throws ConstraintViolationException {
+    public Optional<User> updateUser(int id,User user)  {
 
         Optional<User> newUser=userRepository.findById(id);
-        if(user.getEmail().isBlank()||user.getPassword().isBlank()) return Optional.empty();
+        //if(user.getEmail().isBlank()||user.getPassword().isBlank()||user.getName().isBlank()||user.getPhone().isBlank()) throw new NumberFormatException("Input Field is empty") ;
         if(newUser.isPresent()){
 
             newUser.get().setEmail(user.getEmail());
