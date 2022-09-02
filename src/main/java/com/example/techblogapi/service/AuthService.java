@@ -15,7 +15,7 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
-    public User signUp(User user)  throws ConstraintViolationException {
+    public User signUp(User user)  {
 
         return userRepository.save(user);
     }
@@ -25,7 +25,7 @@ public class AuthService {
         String userEmail=user.getEmail();
         String userPassword=user.getPassword();
         Optional<User> newUser=userRepository.findByEmail(userEmail);
-        if(newUser.isEmpty()) throw new EntityNotFoundException("Invalid Email");
+        if(newUser.isEmpty()) return Optional.empty();
         if(newUser.get().getPassword().equals(userPassword)) return newUser;
         return Optional.empty();
 
