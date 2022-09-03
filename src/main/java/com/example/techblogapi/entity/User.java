@@ -4,6 +4,7 @@ package com.example.techblogapi.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 
@@ -16,20 +17,16 @@ public class User {
     private int id;
 
     @Column(unique = true)
-    @NotBlank(message = "Email may not be blank")
-    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",flags = Pattern.Flag.CASE_INSENSITIVE)
+    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",flags = Pattern.Flag.CASE_INSENSITIVE, message = "Email have to be unique")
     private String email;
 
-    //@Column(nullable = false)
-    @NotBlank(message = "Password may not be blank")
-    @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,}")
+    @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,}", message = "Password have to be 8 character long" +
+            " Must have atleast one digit one uppercase and one lowercase Character")
     private String password;
 
-    //@Column(nullable = false)
-    @NotBlank(message = "Name may not be blank")
+    @Pattern(regexp = "[A-Za-z]{3,}", message = "Invalid name. name must have length atleast 3 character UpperCase or LowerCase")
     private String name;
-   // @Column(nullable = false)
-    @NotBlank(message = "Phone may not be blank")
+    @Pattern(regexp = "[0-9]{11}" ,message = "Invalid Phone. Number must have exactly 11 digit")
     private String phone;
 
     @Temporal(TemporalType.TIMESTAMP)
