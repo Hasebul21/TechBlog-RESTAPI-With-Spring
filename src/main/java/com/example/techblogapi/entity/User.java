@@ -3,8 +3,6 @@ package com.example.techblogapi.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 
@@ -24,7 +22,7 @@ public class User {
             " Must have atleast one digit one uppercase and one lowercase Character")
     private String password;
 
-    @Pattern(regexp = "[A-Za-z]{3,}", message = "Invalid name. name must have length atleast 3 character UpperCase or LowerCase")
+    @Pattern(regexp = "^[A-Za-z\\s]+$"  , message = "Invalid name. name must have length atleast 3 character UpperCase or LowerCase")
     private String name;
     @Pattern(regexp = "[0-9]{11}" ,message = "Invalid Phone. Number must have exactly 11 digit")
     private String phone;
