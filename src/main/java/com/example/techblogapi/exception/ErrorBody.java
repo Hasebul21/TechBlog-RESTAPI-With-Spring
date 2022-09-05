@@ -10,7 +10,7 @@ class ErrorBody {
 
     private HttpStatus status;
 
-    public List<String> message= new ArrayList<String>();
+    private List<String> message= new ArrayList<String>();
     private LocalDateTime timestamp;
 
 
@@ -19,25 +19,12 @@ class ErrorBody {
         timestamp = LocalDateTime.now();
     }
 
-
     public HttpStatus getStatus() {
-
         return status;
     }
 
     public void setStatus(HttpStatus status) {
-
         this.status = status;
-    }
-
-    public LocalDateTime getTimestamp() {
-
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-
-        this.timestamp = timestamp;
     }
 
     public List<String> getMessage() {
@@ -48,5 +35,11 @@ class ErrorBody {
         this.message = message;
     }
 
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
 
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
 }
