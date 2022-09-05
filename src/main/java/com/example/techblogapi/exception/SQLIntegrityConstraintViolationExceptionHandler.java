@@ -20,8 +20,7 @@ public class SQLIntegrityConstraintViolationExceptionHandler extends ResponseEnt
         Error.add(ex.getMessage());
         ErrorBody errorBody = new ErrorBody();
         errorBody.setMessage(Error);
-        errorBody.setMessage(Error);
-        errorBody.setStatus(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(errorBody,HttpStatus.NOT_FOUND);
+        errorBody.setStatus(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorBody,HttpStatus.BAD_REQUEST);
     }
 }

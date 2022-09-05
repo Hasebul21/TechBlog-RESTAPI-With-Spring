@@ -39,7 +39,6 @@ public class UserService {
         if(newUser.isEmpty())  throw new EntityNotFoundException(User.class,"Email",String.valueOf(newUser.get().getEmail()));
 
         newUser.get().setEmail(user.getEmail());
-        System.out.println("Hello");
         newUser.get().setPassword(user.getPassword());
         newUser.get().setName(user.getName());
         newUser.get().setPhone(user.getPhone());
@@ -55,4 +54,5 @@ public class UserService {
         }
         throw new EntityNotFoundException(User.class,"id",String.valueOf(id));
     }
+
 }
