@@ -15,7 +15,6 @@ public class SQLIntegrityConstraintViolationExceptionHandler extends ResponseEnt
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<Object> handle(SQLIntegrityConstraintViolationException ex) {
-
         List<String> Error=new ArrayList<>();
         Error.add(ex.getMessage());
         ErrorBody errorBody = new ErrorBody();

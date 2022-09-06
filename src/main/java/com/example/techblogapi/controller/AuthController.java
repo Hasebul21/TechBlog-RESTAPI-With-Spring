@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 public class AuthController {
 
@@ -24,8 +26,8 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<? extends Object> signIn(@RequestBody Users users) {
 
-        Users newUsers =authService.signIn(users);
-        return ResponseEntity.status(HttpStatus.OK).body(newUsers);
-
+        Optional<Users> newUser =authService.signIn(users);
+        if (newUser.isPresent()) return ResponseEntity.status(HttpStatus.OK).body(newUser);
+        return new ResponseEntity<>("Password didn't match", HttpStatus.BAD_REQUEST);
     }
 }
