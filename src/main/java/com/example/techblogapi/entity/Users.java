@@ -2,35 +2,47 @@ package com.example.techblogapi.entity;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.Date;
 
 @Entity
-public class User {
+public class Users {
 
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank
+    @NotEmpty
+    @NotNull
     @Column(unique = true)
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",flags = Pattern.Flag.CASE_INSENSITIVE, message = "Email have to be unique")
     private String email;
 
+    @NotBlank
+    @NotEmpty
+    @NotNull
     @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,}", message = "Password have to be 8 character long" +
             " Must have atleast one digit one uppercase and one lowercase Character")
     private String password;
 
+    @NotBlank
+    @NotEmpty
+    @NotNull
     @Pattern(regexp = "^[A-Za-z\\s]+$"  , message = "Invalid name. name must have length atleast 3 character UpperCase or LowerCase")
     private String name;
+
+    @NotBlank
+    @NotEmpty
+    @NotNull
     @Pattern(regexp = "[0-9]{11}" ,message = "Invalid Phone. Number must have exactly 11 digit")
     private String phone;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date CreatedDate=new Date(System.currentTimeMillis());
 
-    public User() {
+    public Users() {
 
     }
 
