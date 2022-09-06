@@ -31,10 +31,10 @@ public class UserService {
 
     }
 
-    public Users updateUser(int id, Users users) throws TransactionSystemException {
+    public Users updateUser(int id, Users users) {
 
         Optional<Users> newUser=userRepository.findById(id);
-        if(newUser.isEmpty())  throw new EntityNotFoundException(Users.class,"Email",String.valueOf(newUser.get().getEmail()));
+        if(newUser.isEmpty())  throw new EntityNotFoundException(Users.class,"id",String.valueOf(id));
 
         newUser.get().setEmail(users.getEmail());
         newUser.get().setPassword(users.getPassword());

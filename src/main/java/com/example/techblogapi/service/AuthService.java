@@ -20,14 +20,13 @@ public class AuthService {
 
     }
 
-    public Users signIn(Users users)   {
+    public Optional<Users> signIn(Users users)   {
 
         String userEmail= users.getEmail();
         String userPassword= users.getPassword();
         Optional<Users> newUser=userRepository.findByEmail(userEmail);
         if(newUser.isEmpty()) throw new EntityNotFoundException(Users.class,"Email",userEmail);
-        if(newUser.get().getPassword().equals(userPassword)) return newUser.get();
-        throw new EntityNotFoundException(Users.class,"Email",userEmail,"Password",userPassword);
-
+        if(newUser.get().getPassword().equals(userPassword)) return newUser;
+        return Optional.empty();
     }
 }
