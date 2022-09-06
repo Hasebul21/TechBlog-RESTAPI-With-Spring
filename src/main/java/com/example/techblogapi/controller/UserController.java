@@ -1,7 +1,7 @@
 package com.example.techblogapi.controller;
 
 
-import com.example.techblogapi.entity.User;
+import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ public class UserController {
 
 
     @GetMapping("/")
-     public ResponseEntity<Iterable<User>> getAllUser() {
+     public ResponseEntity<Iterable<Users>> getAllUser() {
 
           return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUser());
      }
@@ -25,25 +25,25 @@ public class UserController {
      @GetMapping("/{id}")
      public ResponseEntity<? extends Object> getSingleUser(@PathVariable int id) {
 
-          User newUser=userService.getSingleUser(id);
-          return ResponseEntity.status(HttpStatus.OK).body(newUser);
+          Users newUsers =userService.getSingleUser(id);
+          return ResponseEntity.status(HttpStatus.OK).body(newUsers);
      }
 
 
      @PutMapping("/{id}")
-     public ResponseEntity<? extends Object> updateUser(@PathVariable int id,@RequestBody User user) {
+     public ResponseEntity<? extends Object> updateUser(@PathVariable int id,@RequestBody Users users) {
 
 
-        User newUser=userService.updateUser(id,user);
-        return ResponseEntity.status(HttpStatus.OK).body(newUser);
+        Users newUsers =userService.updateUser(id, users);
+        return ResponseEntity.status(HttpStatus.OK).body(newUsers);
 
      }
 
      @DeleteMapping("/{id}")
      public ResponseEntity<? extends Object> deleteUser(@PathVariable int id) {
 
-         User newUser=userService.deleteUser(id);
-         return ResponseEntity.status(HttpStatus.OK).body(newUser);
+         Users newUsers =userService.deleteUser(id);
+         return ResponseEntity.status(HttpStatus.OK).body(newUsers);
      }
 
 }

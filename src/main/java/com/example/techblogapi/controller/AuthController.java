@@ -1,15 +1,11 @@
 package com.example.techblogapi.controller;
 
-import com.example.techblogapi.entity.User;
+import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.EntityNotFoundException;
-import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 public class AuthController {
@@ -17,18 +13,19 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<? extends Object> signUp(@RequestBody User user)  {
 
-        User newUser=authService.signUp(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    @PostMapping("/signup")
+    public ResponseEntity<? extends Object> signUp(@RequestBody Users users)  {
+
+        Users newUsers =authService.signUp(users);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUsers);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<? extends Object> signIn(@RequestBody User user) {
+    public ResponseEntity<? extends Object> signIn(@RequestBody Users users) {
 
-        User newUser=authService.signIn(user);
-        return ResponseEntity.status(HttpStatus.OK).body(newUser);
+        Users newUsers =authService.signIn(users);
+        return ResponseEntity.status(HttpStatus.OK).body(newUsers);
 
     }
 }
