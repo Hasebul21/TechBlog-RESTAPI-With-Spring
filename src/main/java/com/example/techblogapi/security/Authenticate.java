@@ -15,7 +15,7 @@ public class Authenticate {
     @Autowired
     private UserDetailsInfo userDetailsInfo;
 
-    public String authenticate(@RequestBody Users users){
+    public String authenticate(Users users){
 
 
         final UserDetails userDetails=userDetailsInfo.loadUserByUsername(users.getEmail());
