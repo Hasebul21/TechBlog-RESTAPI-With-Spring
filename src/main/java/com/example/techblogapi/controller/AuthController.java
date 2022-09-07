@@ -23,14 +23,14 @@ public class AuthController {
     public ResponseEntity<? extends Object> signUp(@RequestBody Users users)  {
 
         Users newUsers =authService.signUp(users);
-        return ResponseEntity.status(HttpStatus.CREATED).body(authenticate.authenticate(users));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authenticate.authenticate(newUsers));
     }
 
     @PostMapping("/signin")
     public ResponseEntity<? extends Object> signIn(@RequestBody Users users) {
 
         Optional<Users> newUser =authService.signIn(users);
-        if (newUser.isPresent()) return ResponseEntity.status(HttpStatus.OK).body(authenticate.authenticate(users));
+        if (newUser.isPresent()) return ResponseEntity.status(HttpStatus.OK).body(authenticate.authenticate(newUser.get()));
         return new ResponseEntity<>("Password didn't match", HttpStatus.BAD_REQUEST);
     }
 }
