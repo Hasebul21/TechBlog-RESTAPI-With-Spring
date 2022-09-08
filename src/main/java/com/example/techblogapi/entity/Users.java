@@ -23,8 +23,8 @@ public class Users {
     @NotBlank
     @NotEmpty
     @NotNull
-    @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,}", message = "Password have to be 8 character long" +
-            " Must have atleast one digit one uppercase and one lowercase Character")
+   /* @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,}", message = "Password have to be 8 character long" +
+            " Must have atleast one digit one uppercase and one lowercase Character")*/
     private String password;
 
     @NotBlank
