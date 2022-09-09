@@ -4,7 +4,11 @@ import com.example.techblogapi.entity.Storys;
 import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.exception.EntityNotFoundException;
 import com.example.techblogapi.repository.StoryRepository;
+import com.example.techblogapi.repository.UserRepository;
+import com.example.techblogapi.security.JwtUtil;
+import com.example.techblogapi.security.UserDetailsInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,6 +18,16 @@ public class StoryService {
 
     @Autowired
     private StoryRepository storyRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsInfo userDetailsInfo;
+
 
     public Iterable<Storys> getAllStory() {
 
@@ -28,18 +42,26 @@ public class StoryService {
 
     }
 
-    public Storys postStory(Storys storys)  {
+    public Optional<Storys> postStory(Storys storys, String token)  {
 
-        return storyRepository.save(storys);
+
+        if(jwtUtil.isTokenExpired(token)) return Optional.empty();
+        String userEmail= jwtUtil.extractUsername(token);
+        Optional<Users> currentUser=userRepository.findByEmail(userEmail);
+        storys.setAuthorid(currentUser.get());
+        storyRepository.save(storys);
+        return Optional.of(storys);
 
     }
 
-    public Storys updateStory(int id, Storys storys) {
+    public Storys updateStory(int id, Storys storys,String token) {
 
         Optional<Storys> newStory=storyRepository.findById(id);
         if(newStory.isEmpty())  throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
+       // String userEmail= jwtUtil.extractUsername(token);
+        //UserDetails userDetails=userDetailsInfo.loadUserByUsername(userEmail);
+        //if(!jwtUtil.validateToken(token,userDetails))
 
-        newStory.get().setAuthorName(storys.getAuthorName());
         newStory.get().setTitle(storys.getTitle());
         newStory.get().setDescription(storys.getTitle());
 
