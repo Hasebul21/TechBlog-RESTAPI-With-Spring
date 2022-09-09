@@ -38,7 +38,7 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .antMatchers("/signin","/signup")
                 .permitAll()
-                .antMatchers(HttpMethod.GET,"/storys/","/storys/*")
+                .antMatchers(HttpMethod.GET,"/stories/","/stories/*")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
