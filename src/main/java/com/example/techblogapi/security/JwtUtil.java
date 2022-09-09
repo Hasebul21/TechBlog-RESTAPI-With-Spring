@@ -3,6 +3,7 @@ package com.example.techblogapi.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,8 @@ import java.util.function.Function;
 @Service
 public class JwtUtil implements Serializable {
 
-    private String SECRET_KEY = "6150645367566B58703273357638792F423F4528482B4D6251655468576D5A71";
+    @Value("${SECRET_KEY}")
+    private String SECRET_KEY;
 
     public String extractUsername(String token) {
 
