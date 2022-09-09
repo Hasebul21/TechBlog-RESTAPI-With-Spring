@@ -8,6 +8,7 @@ import com.example.techblogapi.repository.UserRepository;
 import com.example.techblogapi.security.JwtUtil;
 import com.example.techblogapi.security.UserDetailsInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -42,11 +43,11 @@ public class StoryService {
 
     }
 
-    public Optional<Storys> postStory(Storys storys, String token)  {
+    public Optional<Storys> postStory(Storys storys, Authentication authentication)  {
 
 
-        if(jwtUtil.isTokenExpired(token)) return Optional.empty();
-        String userEmail= jwtUtil.extractUsername(token);
+        if(!authentication.isAuthenticated()) return Optional.empty();
+        String userEmail= authentication.getName();
         Optional<Users> currentUser=userRepository.findByEmail(userEmail);
         storys.setAuthorid(currentUser.get());
         storyRepository.save(storys);
@@ -54,27 +55,36 @@ public class StoryService {
 
     }
 
-    public Storys updateStory(int id, Storys storys,String token) {
+    public Optional<Storys> updateStory(int id, Storys storys, Authentication authentication) {
 
         Optional<Storys> newStory=storyRepository.findById(id);
         if(newStory.isEmpty())  throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
-       // String userEmail= jwtUtil.extractUsername(token);
-        //UserDetails userDetails=userDetailsInfo.loadUserByUsername(userEmail);
-        //if(!jwtUtil.validateToken(token,userDetails))
+        if(checkAuth(newStory,authentication)){
 
-        newStory.get().setTitle(storys.getTitle());
-        newStory.get().setDescription(storys.getTitle());
-
-        return storyRepository.save(newStory.get());
+            newStory.get().setTitle(storys.getTitle());
+            newStory.get().setDescription(storys.getDescription());
+            storyRepository.save(newStory.get());
+        }
+        return Optional.empty();
     }
 
-    public Storys deleteStory(int id) {
+    public Optional<Storys> deleteStory(int id,Authentication authentication) {
 
         Optional<Storys> newStory=storyRepository.findById(id);
-        if(newStory.isPresent()) {
+        if(newStory.isEmpty()) throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
+        if(checkAuth(newStory,authentication)) {
+
             storyRepository.deleteById(id);
-            return newStory.get();
         }
-        throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
+        return Optional.empty();
+    }
+
+    public boolean checkAuth(Optional<Storys> newStory,Authentication authentication){
+
+        if(!authentication.isAuthenticated()) return false;
+        String CurrentUserEmail= authentication.getName();
+        Users authorDetails=newStory.get().getAuthorid();
+        String authEmail=authorDetails.getEmail();
+        return CurrentUserEmail.equals(authEmail);
     }
 }

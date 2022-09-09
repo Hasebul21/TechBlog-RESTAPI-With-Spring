@@ -33,28 +33,27 @@ public class StoryController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<? extends Object> postStory(@RequestBody Storys storys,@RequestHeader("Authorization") String token,
-                                                      Authentication authentication) {
-        System.out.println(authentication.isAuthenticated());
-        String gettoken= token.substring(7);
-        Optional<Storys> newStory =storyService.postStory(storys,gettoken);
+    public ResponseEntity<? extends Object> postStory(@RequestBody Storys storys,Authentication authentication) {
+
+        Optional<Storys> newStory =storyService.postStory(storys,authentication);
         if(newStory.isPresent()) return ResponseEntity.status(HttpStatus.OK).body(newStory);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is not valid");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<? extends Object> updateStory(@PathVariable int id, @RequestBody Storys storys,
-                                                        @RequestHeader("Authorization") String token) {
-        String gettoken= token.substring(7);
-        Storys newStory =storyService.updateStory(id, storys,token);
+    public ResponseEntity<? extends Object> updateStory(@PathVariable int id, @RequestBody Storys storys, Authentication authentication) {
+
+        Optional<Storys> newStory =storyService.updateStory(id,storys,authentication);
+        if(newStory.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED User "+authentication.getName());
         return ResponseEntity.status(HttpStatus.OK).body(newStory);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<? extends Object> deleteStory(@PathVariable int id) {
+    public ResponseEntity<? extends Object> deleteStory(@PathVariable int id,Authentication authentication) {
 
-        Storys newStory =storyService.deleteStory(id);
+        Optional<Storys> newStory =storyService.deleteStory(id,authentication);
+        if(newStory.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED User "+authentication.getName());
         return ResponseEntity.status(HttpStatus.OK).body(newStory);
     }
 }
