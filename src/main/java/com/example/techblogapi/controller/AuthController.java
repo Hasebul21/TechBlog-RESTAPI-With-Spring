@@ -20,14 +20,14 @@ public class AuthController {
     private Authenticate authenticate;
 
     @PostMapping("/signup")
-    public ResponseEntity<? extends Object> signUp(@RequestBody Users users)  {
+    public ResponseEntity<?> signUp(@RequestBody Users users)  {
         Users newUsers =authService.signUp(users);
         String token=authenticate.authenticate(newUsers);
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<? extends Object> signIn(@RequestBody Users users) {
+    public ResponseEntity<?> signIn(@RequestBody Users users) {
         Optional<Users> newUser = authService.signIn(users);
         return newUser
                 .map(value -> ResponseEntity.status(HttpStatus.OK).body(authenticate.authenticate(value)))
