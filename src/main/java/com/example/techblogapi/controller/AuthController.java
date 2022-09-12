@@ -19,14 +19,14 @@ public class AuthController {
     @Autowired
     private Authenticate authenticate;
 
-    @PostMapping("/signup")
+    @PostMapping(path="${v1API}/signup")
     public ResponseEntity<?> signUp(@RequestBody Users users)  {
         Users newUser =authService.signUp(users);
         String token=authenticate.authenticate(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
 
-    @PostMapping("/signin")
+    @PostMapping(path="${v1API}/signin")
     public ResponseEntity<?> signIn(@RequestBody Users users) {
         Optional<Users> newUser = authService.signIn(users);
         if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(users.getEmail()+" and "+users.getPassword()+" didnot match");

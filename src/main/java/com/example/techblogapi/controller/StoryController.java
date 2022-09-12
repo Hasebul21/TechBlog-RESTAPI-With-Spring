@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/stories")
+@RequestMapping(path = "${v1API}/stories")
 public class StoryController {
 
     @Autowired
