@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-class ErrorBody {
+public class ErrorBody {
 
     private HttpStatus status;
 

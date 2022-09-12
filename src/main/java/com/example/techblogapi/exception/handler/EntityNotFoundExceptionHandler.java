@@ -1,5 +1,8 @@
-package com.example.techblogapi.exception;
+package com.example.techblogapi.exception.handler;
 
+import com.example.techblogapi.exception.EntityNotFoundException;
+import com.example.techblogapi.exception.ErrorBody;
+import com.example.techblogapi.exception.RestExceptionHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

@@ -1,5 +1,7 @@
-package com.example.techblogapi.exception;
+package com.example.techblogapi.exception.handler;
 
+import com.example.techblogapi.exception.ErrorBody;
+import com.example.techblogapi.exception.RestExceptionHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SQLIntegrityConstraintViolationExceptionHandler extends ResponseEntityExceptionHandler implements RestExceptionHandler<SQLIntegrityConstraintViolationException>{
+public class SQLIntegrityConstraintViolationExceptionHandler extends ResponseEntityExceptionHandler implements RestExceptionHandler<SQLIntegrityConstraintViolationException> {
 
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
