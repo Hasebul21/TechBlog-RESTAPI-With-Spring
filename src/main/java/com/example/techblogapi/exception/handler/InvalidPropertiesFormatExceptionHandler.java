@@ -1,5 +1,8 @@
-package com.example.techblogapi.exception;
+package com.example.techblogapi.exception.handler;
 
+import com.example.techblogapi.exception.ErrorBody;
+import com.example.techblogapi.exception.InvalidPropertiesFormatException;
+import com.example.techblogapi.exception.RestExceptionHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -9,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class InvalidPropertiesFormatExceptionHandler  extends ResponseEntityExceptionHandler implements RestExceptionHandler<InvalidPropertiesFormatException>{
+public class InvalidPropertiesFormatExceptionHandler  extends ResponseEntityExceptionHandler implements RestExceptionHandler<InvalidPropertiesFormatException> {
 
 
     @ExceptionHandler(InvalidPropertiesFormatException.class)

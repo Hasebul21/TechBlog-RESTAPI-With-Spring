@@ -19,9 +19,6 @@ public class StoryController {
     @Autowired
     private StoryService storyService;
 
-    @Autowired
-    private IAuthenticationFacade authenticationFacade;
-
 
     @GetMapping("/")
     public ResponseEntity<Iterable<Storys>> getAllStory() {
@@ -39,18 +36,14 @@ public class StoryController {
     @PostMapping("/")
     public ResponseEntity<?> postStory(@RequestBody Storys storys) {
 
-        Authentication authentication = authenticationFacade.getAuthentication();
-        Optional<Storys> newStory =storyService.postStory(storys,authentication);
-        if(newStory.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is not valid for "+authentication.getName());
+        Optional<Storys> newStory =storyService.postStory(storys);
         return ResponseEntity.status(HttpStatus.OK).body(newStory);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateStory(@PathVariable int id, @RequestBody Storys storys) {
 
-        Authentication authentication = authenticationFacade.getAuthentication();
-        Optional<Storys> newStory =storyService.updateStory(id,storys,authentication);
-        if(newStory.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized User "+authentication.getName());
+        Optional<Storys> newStory =storyService.updateStory(id,storys);
         return ResponseEntity.status(HttpStatus.OK).body(newStory);
 
     }
@@ -58,9 +51,7 @@ public class StoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteStory(@PathVariable int id) {
 
-        Authentication authentication = authenticationFacade.getAuthentication();
-        Optional<Storys> newStory =storyService.deleteStory(id,authentication);
-        if(newStory.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized User "+authentication.getName());
-        return ResponseEntity.status(HttpStatus.OK).body(newStory);
+        Optional<Storys> newStory =storyService.deleteStory(id);
+        return ResponseEntity.ok().build();
     }
 }
