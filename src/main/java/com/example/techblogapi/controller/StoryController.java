@@ -1,6 +1,7 @@
 package com.example.techblogapi.controller;
 
 
+import com.example.techblogapi.Utils.StoryDto;
 import com.example.techblogapi.entity.Storys;
 import com.example.techblogapi.security.IAuthenticationFacade;
 import com.example.techblogapi.service.StoryService;
@@ -29,21 +30,21 @@ public class StoryController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getSingleStory(@PathVariable int id) {
 
-        Storys newStory =storyService.getSingleStory(id);
+        StoryDto newStory =storyService.getSingleStory(id);
         return ResponseEntity.status(HttpStatus.OK).body(newStory);
     }
 
     @PostMapping("/")
     public ResponseEntity<?> postStory(@RequestBody Storys storys) {
 
-        Optional<Storys> newStory =storyService.postStory(storys);
+        StoryDto newStory =storyService.postStory(storys);
         return ResponseEntity.status(HttpStatus.OK).body(newStory);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateStory(@PathVariable int id, @RequestBody Storys storys) {
 
-        Optional<Storys> newStory =storyService.updateStory(id,storys);
+        StoryDto newStory =storyService.updateStory(id,storys);
         return ResponseEntity.status(HttpStatus.OK).body(newStory);
 
     }
@@ -51,7 +52,7 @@ public class StoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteStory(@PathVariable int id) {
 
-        Optional<Storys> newStory =storyService.deleteStory(id);
+        storyService.deleteStory(id);
         return ResponseEntity.ok().build();
     }
 }

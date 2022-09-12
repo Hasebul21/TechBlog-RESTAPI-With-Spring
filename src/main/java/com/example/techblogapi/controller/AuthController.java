@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(path = "${v1API}")
 public class AuthController {
 
     @Autowired
@@ -19,17 +20,17 @@ public class AuthController {
     @Autowired
     private Authenticate authenticate;
 
-    @PostMapping(path="${v1API}/signup")
+    @PostMapping(path="/signup")
     public ResponseEntity<?> signUp(@RequestBody Users users)  {
         Users newUser =authService.signUp(users);
         String token=authenticate.authenticate(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
 
-    @PostMapping(path="${v1API}/signin")
+    @PostMapping(path="/signin")
     public ResponseEntity<?> signIn(@RequestBody Users users) {
         Optional<Users> newUser = authService.signIn(users);
-        if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(users.getEmail()+" and "+users.getPassword()+" didnot match");
+        if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(users.getEmail()+" and "+users.getPassword()+" did not match");
         String token=authenticate.authenticate(newUser.get());
         return ResponseEntity.status(HttpStatus.OK).body(token);
     }
