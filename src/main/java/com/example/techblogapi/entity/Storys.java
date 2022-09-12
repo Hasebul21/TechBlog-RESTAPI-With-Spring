@@ -65,10 +65,19 @@ public class Storys {
     }
 
     public Users getAuthorid() {
+
         return authorid;
     }
 
     public void setAuthorid(Users authorid) {
+
         this.authorid = authorid;
+    }
+    public Date getCreatedDate() {
+        return CreatedDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        CreatedDate = createdDate;
     }
 }

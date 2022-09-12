@@ -1,7 +1,7 @@
 package com.example.techblogapi.exception.handler;
 
 import com.example.techblogapi.exception.ErrorBody;
-import com.example.techblogapi.exception.InvalidPropertiesFormatException;
+import com.example.techblogapi.exception.InvalidPasswordException;
 import com.example.techblogapi.exception.RestExceptionHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class InvalidPropertiesFormatExceptionHandler  extends ResponseEntityExceptionHandler implements RestExceptionHandler<InvalidPropertiesFormatException> {
+public class InvalidPasswordExceptionHandler extends ResponseEntityExceptionHandler implements RestExceptionHandler<InvalidPasswordException> {
 
 
-    @ExceptionHandler(InvalidPropertiesFormatException.class)
+    @ExceptionHandler(InvalidPasswordException.class)
     @Override
-    public ResponseEntity<Object> handle(InvalidPropertiesFormatException ex) {
-        System.out.println("jhhhhh");
+    public ResponseEntity<Object> handle(InvalidPasswordException ex) {
         List<String> Error=new ArrayList<>();
         Error.add(ex.getMessage());
         ErrorBody errorBody = new ErrorBody();

@@ -1,5 +1,6 @@
 package com.example.techblogapi.service;
 
+import com.example.techblogapi.Utils.StoryDto;
 import com.example.techblogapi.entity.Storys;
 import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.exception.AccessDeniedException;
@@ -27,20 +28,24 @@ public class StoryService {
     @Autowired
     private IAuthenticationFacade authenticationFacade;
 
+    @Autowired
+    private StoryDto storyDto;
+
     public Iterable<Storys> getAllStory() {
 
         return storyRepository.findAll();
     }
 
-    public Storys getSingleStory(int id) {
+    public StoryDto getSingleStory(int id) {
 
         Optional<Storys> checkStory=storyRepository.findById(id);
-        if(checkStory.isPresent()) return checkStory.get();
-        throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
+        if(checkStory.isEmpty()) throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
+        storyDto=getDetails(checkStory.get());
+        return storyDto;
 
     }
 
-    public Optional<Storys> postStory(Storys storys)  {
+    public StoryDto postStory(Storys storys)  {
 
         Authentication authentication = authenticationFacade.getAuthentication();
         if(!authentication.isAuthenticated())  throw new AccessDeniedException(authentication.getName()+" is not Authenticated");
@@ -48,44 +53,55 @@ public class StoryService {
         Optional<Users> currentUser=userRepository.findByEmail(userEmail);
         storys.setAuthorid(currentUser.get());
         storyRepository.save(storys);
-        return Optional.of(storys);
+        storyDto=getDetails(storys);
+        return storyDto;
     }
 
-    public Optional<Storys> updateStory(int id, Storys storys) {
+    public StoryDto updateStory(int id, Storys storys) {
 
-        Authentication authentication = authenticationFacade.getAuthentication();
         Optional<Storys> newStory=storyRepository.findById(id);
         if(newStory.isEmpty())  throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
-        if(checkAuth(newStory,authentication)){
+        if(checkAuth(newStory)){
 
             newStory.get().setTitle(storys.getTitle());
             newStory.get().setDescription(storys.getDescription());
             storyRepository.save(newStory.get());
-            return newStory;
+            storyDto=getDetails(newStory.get());
+            return storyDto;
         }
-        throw new AccessDeniedException(authentication.getName()+" is a Unauthorized user");
+        throw new AccessDeniedException(authenticationFacade.getAuthentication().getName()+" is an Unauthorized user");
 
     }
 
-    public Optional<Storys> deleteStory(int id) {
+    public void deleteStory(int id) {
 
-        Authentication authentication = authenticationFacade.getAuthentication();
         Optional<Storys> newStory=storyRepository.findById(id);
         if(newStory.isEmpty()) throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
-        if(checkAuth(newStory,authentication)) {
+        if(checkAuth(newStory)) {
 
             storyRepository.deleteById(id);
-            return Optional.empty();
         }
-        throw new AccessDeniedException(authentication.getName()+" is a Unauthorized user");
+        throw new AccessDeniedException(authenticationFacade.getAuthentication().getName()+" is an Unauthorized user");
     }
 
-    public boolean checkAuth(Optional<Storys> newStory,Authentication authentication){
+    public boolean checkAuth(Optional<Storys> newStory){
 
+        Authentication authentication = authenticationFacade.getAuthentication();
         if(!authentication.isAuthenticated()) return false;
         String CurrentUserEmail= authentication.getName();
         Users authorDetails=newStory.get().getAuthorid();
         String authEmail=authorDetails.getEmail();
         return CurrentUserEmail.equals(authEmail);
+    }
+
+    public StoryDto getDetails(Storys storys){
+
+        StoryDto storyDto1=new StoryDto();
+        storyDto1.setId(storys.getId());
+        storyDto1.setTitle(storys.getTitle());
+        storyDto1.setDescription(storys.getDescription());
+        storyDto1.setAuthor(storys.getAuthorid().getEmail());
+        storyDto1.setCreatedDate(storys.getCreatedDate());
+        return storyDto1;
     }
 }

@@ -2,9 +2,8 @@ package com.example.techblogapi.service;
 
 import com.example.techblogapi.Utils.PasswordValidator;
 import com.example.techblogapi.entity.Users;
-import com.example.techblogapi.exception.AccessDeniedException;
 import com.example.techblogapi.exception.EntityNotFoundException;
-import com.example.techblogapi.exception.InvalidPropertiesFormatException;
+import com.example.techblogapi.exception.InvalidPasswordException;
 import com.example.techblogapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 
 @Service
@@ -34,7 +32,7 @@ public class AuthService {
             return userRepository.save(users);
 
         }
-        throw new InvalidPropertiesFormatException(users.getPassword());
+        throw new InvalidPasswordException(users.getPassword());
 
     }
 
