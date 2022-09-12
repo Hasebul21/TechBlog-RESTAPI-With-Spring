@@ -2,6 +2,7 @@ package com.example.techblogapi.service;
 
 import com.example.techblogapi.Utils.PasswordValidator;
 import com.example.techblogapi.entity.Users;
+import com.example.techblogapi.exception.AccessDeniedException;
 import com.example.techblogapi.exception.EntityNotFoundException;
 import com.example.techblogapi.exception.InvalidPropertiesFormatException;
 import com.example.techblogapi.repository.UserRepository;
@@ -44,8 +45,7 @@ public class AuthService {
         Optional<Users> newUser=userRepository.findByEmail(userEmail);
         if(newUser.isEmpty()) throw new EntityNotFoundException(Users.class,"Email",userEmail);
         String hashPass=newUser.get().getPassword();
-        if(!passwordEncoder.matches(userPassword, hashPass)) throw new EntityNotFoundException(Users.class,"Pass",userPassword);
-        if(newUser.get().getPassword().equals(hashPass)) return newUser;
-        return Optional.empty();
+        if(!passwordEncoder.matches(userPassword, hashPass)) return Optional.empty();
+        return newUser;
     }
 }
