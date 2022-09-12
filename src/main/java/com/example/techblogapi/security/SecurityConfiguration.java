@@ -1,6 +1,7 @@
 package com.example.techblogapi.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,6 +27,9 @@ public class SecurityConfiguration {
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Value("${v1API}")
+    private String apiVersion;
+
     @Bean
     public PasswordEncoder passwordEncoder(){
 
@@ -36,11 +40,11 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/signin","/api/v1/signup")
+                .antMatchers(apiVersion+"/signin",apiVersion+"/signup")
                 .permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/stories/","/api/v1/stories/*")
+                .antMatchers(HttpMethod.GET,apiVersion+"/stories/",apiVersion+"/stories/*")
                 .permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/users/","/api/v1/users/*")
+                .antMatchers(HttpMethod.GET,apiVersion+"/users/",apiVersion+"/users/*")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
