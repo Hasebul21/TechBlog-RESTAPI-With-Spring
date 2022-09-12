@@ -21,16 +21,16 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody Users users)  {
-        Users newUsers =authService.signUp(users);
-        String token=authenticate.authenticate(newUsers);
+        Users newUser =authService.signUp(users);
+        String token=authenticate.authenticate(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
 
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody Users users) {
         Optional<Users> newUser = authService.signIn(users);
-        return newUser
-                .map(value -> ResponseEntity.status(HttpStatus.OK).body(authenticate.authenticate(value)))
-                .orElseGet(() -> new ResponseEntity<>("Password didn't match", HttpStatus.BAD_REQUEST));
+        if(newUser.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(users.getEmail()+" and "+users.getPassword()+" didnot match");
+        String token=authenticate.authenticate(newUser.get());
+        return ResponseEntity.status(HttpStatus.OK).body(token);
     }
 }
