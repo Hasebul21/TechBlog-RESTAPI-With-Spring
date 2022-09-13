@@ -23,23 +23,23 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
-    public Users signUp(Users users)  {
+    public Users signUp(Users user)  {
 
-        if(passwordValidator.isValid(users.getPassword())) {
+        if(passwordValidator.isValid(user.getPassword())) {
 
-            String pass=passwordEncoder.encode(users.getPassword());
-            users.setPassword(pass);
-            return userRepository.save(users);
+            String pass=passwordEncoder.encode(user.getPassword());
+            user.setPassword(pass);
+            return userRepository.save(user);
 
         }
-        throw new InvalidPasswordException(users.getPassword());
+        throw new InvalidPasswordException(user.getPassword());
 
     }
 
-    public Optional<Users> signIn(Users users)   {
+    public Optional<Users> signIn(Users user)   {
 
-        String userEmail= users.getEmail();
-        String userPassword= users.getPassword();
+        String userEmail= user.getEmail();
+        String userPassword= user.getPassword();
         Optional<Users> newUser=userRepository.findByEmail(userEmail);
         if(newUser.isEmpty()) throw new EntityNotFoundException(Users.class,"Email",userEmail);
         String hashPass=newUser.get().getPassword();
