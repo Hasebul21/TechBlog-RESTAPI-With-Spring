@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ConstraintViolationExceptionHandler extends ResponseEntityExceptionHandler implements RestExceptionHandler<ConstraintViolationException> {
+public class ConstraintViolationExceptionHandler extends ResponseEntityExceptionHandler implements
+        RestExceptionHandler<ConstraintViolationException> {
 
 
     @ExceptionHandler(ConstraintViolationException.class)

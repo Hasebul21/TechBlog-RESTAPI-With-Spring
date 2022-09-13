@@ -1,17 +1,13 @@
 package com.example.techblogapi.controller;
 
 
-import com.example.techblogapi.Utils.StoryDto;
+import com.example.techblogapi.Dto.StoryDto;
 import com.example.techblogapi.entity.Storys;
-import com.example.techblogapi.security.IAuthenticationFacade;
 import com.example.techblogapi.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "${v1API}/stories")
