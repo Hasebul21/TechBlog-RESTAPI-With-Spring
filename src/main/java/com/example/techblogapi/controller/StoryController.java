@@ -1,7 +1,7 @@
 package com.example.techblogapi.controller;
 
 
-import com.example.techblogapi.Dto.StoryDto;
+import com.example.techblogapi.dto.StoryDto;
 import com.example.techblogapi.entity.Storys;
 import com.example.techblogapi.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class StoryController {
 
 
     @GetMapping("/")
-    public ResponseEntity<Iterable<Storys>> getAllStory() {
+    public ResponseEntity<Iterable<StoryDto>> getAllStory() {
 
         return ResponseEntity.status(HttpStatus.OK).body(storyService.getAllStory());
     }
