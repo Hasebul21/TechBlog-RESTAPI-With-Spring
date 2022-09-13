@@ -1,6 +1,6 @@
 package com.example.techblogapi.service;
 
-import com.example.techblogapi.Dto.StoryDto;
+import com.example.techblogapi.dto.StoryDto;
 import com.example.techblogapi.entity.Storys;
 import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.exception.AccessDeniedException;
@@ -11,7 +11,10 @@ import com.example.techblogapi.security.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StoryService {
@@ -26,9 +29,11 @@ public class StoryService {
     private IAuthenticationFacade authenticationFacade;
 
 
-    public Iterable<Storys> getAllStory() {
+    public Iterable<StoryDto> getAllStory() {
 
-        return storyRepository.findAll();
+        List<Storys>allStudent=storyRepository.findAll();
+        List<StoryDto>allStudentDto= allStudent.stream().map(x->getDetails(x)).toList();
+        return allStudentDto;
     }
 
     public StoryDto getSingleStory(int id) {

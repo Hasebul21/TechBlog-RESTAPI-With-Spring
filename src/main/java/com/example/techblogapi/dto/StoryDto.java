@@ -1,6 +1,4 @@
-package com.example.techblogapi.Dto;
-
-import org.springframework.stereotype.Component;
+package com.example.techblogapi.dto;
 
 import java.util.Date;
 
