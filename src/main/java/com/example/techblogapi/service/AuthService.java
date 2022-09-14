@@ -2,6 +2,7 @@ package com.example.techblogapi.service;
 
 import com.example.techblogapi.Utils.PasswordValidator;
 import com.example.techblogapi.entity.Users;
+import com.example.techblogapi.exception.DuplicateEmailException;
 import com.example.techblogapi.exception.EntityNotFoundException;
 import com.example.techblogapi.exception.InvalidPasswordException;
 import com.example.techblogapi.repository.UserRepository;
@@ -24,6 +25,10 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
     public Users signUp(Users user)  {
+
+        String email=user.getEmail();
+        Optional<Users>existUser=userRepository.findByEmail(email);
+        if(existUser.isPresent()) throw new DuplicateEmailException(email+" already exist");
 
         if(passwordValidator.isValid(user.getPassword())) {
 
