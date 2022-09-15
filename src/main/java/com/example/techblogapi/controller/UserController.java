@@ -5,8 +5,12 @@ import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "${v1API}/users")
@@ -17,7 +21,7 @@ public class UserController {
 
 
     @GetMapping("/")
-     public ResponseEntity<Iterable<Users>> getAllUser() {
+     public ResponseEntity<List<Users>> getAllUser() {
 
           return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUser());
      }
@@ -30,13 +34,10 @@ public class UserController {
      }
 
 
-     @PutMapping("/{id}")
+     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
      public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody Users users) {
-
-
-        Users newUsers =userService.updateUser(id, users);
-        return ResponseEntity.status(HttpStatus.OK).body(newUsers);
-
+        Users newUsers = userService.updateUser(id, users);
+        return new ResponseEntity<>(newUsers, HttpStatus.OK);
      }
 
      @DeleteMapping("/{id}")
