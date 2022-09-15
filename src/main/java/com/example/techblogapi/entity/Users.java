@@ -40,8 +40,12 @@ public class Users {
     @Temporal(TemporalType.TIMESTAMP)
     private Date CreatedDate=new Date(System.currentTimeMillis());
 
-    public Users() {
-
+    public Users(int id, String email, String password, String name, String phone) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
     }
 
     public void setId(int id) {

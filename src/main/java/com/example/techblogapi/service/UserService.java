@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,8 +19,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Iterable<Users> getAllUser() {
+    public List<Users> getAllUser() {
 
+        System.out.println("Total Number : "+userRepository.findAll().size());
         return userRepository.findAll();
     }
 
