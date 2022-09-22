@@ -1,5 +1,6 @@
 package com.example.techblogapi.security;
 
+import com.example.techblogapi.exception.EntityNotFoundException;
 import com.example.techblogapi.repository.UserRepository;
 import com.example.techblogapi.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class UserDetailsInfo implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         Optional<Users> newUser=userRepository.findByEmail(email);
+        if(newUser.isEmpty()) throw new EntityNotFoundException(Users.class,"email",email);
         Users realUsers =newUser.get();
         return new User(realUsers.getEmail(), realUsers.getPassword(),new ArrayList<>());
 
