@@ -81,6 +81,7 @@ public class StoryService {
         if(checkAuth(newStory)) {
 
             storyRepository.deleteById(id);
+            return;
         }
         throw new AccessDeniedException(authenticationFacade.getAuthentication().getName()+" is an Unauthorized user");
     }

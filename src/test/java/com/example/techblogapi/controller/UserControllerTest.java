@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
@@ -26,16 +27,14 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Optional;
 
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 
@@ -94,18 +93,40 @@ public class UserControllerTest {
 
         Users user=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
         Users mockUser=new Users(1,"haseb@gmail.com","abcdef","Asif","01789533586");
-        when(mockUserService.updateUser(1,user)).thenReturn(mockUser);
+        when(mockUserService.updateUser(eq(user.getId()),any(Users.class))).thenReturn(mockUser);
 
         mockMvc.perform(put("/api/v1/users/{id}",1)
-                        .content(asJsonString(user)).contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .characterEncoding("utf-8")
+                        .content(asJsonString(user)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.email").value("haseb@gmail.com"))
                 .andExpect(jsonPath("$.password").value("abcdef"))
                 .andExpect(jsonPath("$.name").value("Asif"))
                 .andExpect(jsonPath("$.phone").value("01789533586"));
+    }
+
+    @Test
+    @DisplayName("DELETE/users/1  SUCCESS")
+    void deleteUserSuccess() throws Exception{
+
+        doNothing().when(mockUserService).deleteUser(1);
+
+        mockMvc.perform(delete("/api/v1/users/{id}",1))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("DELETE/users/1  Failed")
+    void deleteUserFailed() throws Exception{
+
+        doThrow(EntityNotFoundException.class).when(mockUserService).deleteUser(1);
+
+        mockMvc.perform(delete("/api/v1/users/{id}",1))
+                .andExpect(status().isNotFound());
     }
 
     public static String asJsonString(final Object obj) {

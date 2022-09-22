@@ -33,9 +33,9 @@ public class UserController {
           return ResponseEntity.status(HttpStatus.OK).body(newUsers);
      }
 
-
      @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
      public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody Users users) {
+
         Users newUsers = userService.updateUser(id, users);
         return new ResponseEntity<>(newUsers, HttpStatus.OK);
      }
@@ -43,8 +43,8 @@ public class UserController {
      @DeleteMapping("/{id}")
      public ResponseEntity<?> deleteUser(@PathVariable int id) {
 
-         Users newUsers =userService.deleteUser(id);
-         return ResponseEntity.status(HttpStatus.OK).body(newUsers);
+         userService.deleteUser(id);
+         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
      }
 
 }
