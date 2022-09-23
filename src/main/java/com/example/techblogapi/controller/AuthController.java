@@ -29,12 +29,8 @@ public class AuthController {
 
     @PostMapping(path="/signin")
     public ResponseEntity<?> signIn(@RequestBody Users users) {
-        Optional<Users> newUser = authService.signIn(users);
-        if(newUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(users.getEmail()+" and "+
-                    users.getPassword()+" did not match");
-        }
-        String token=authenticate.authenticate(newUser.get());
+        Users newUser = authService.signIn(users);
+        String token=authenticate.authenticate(newUser);
         return ResponseEntity.status(HttpStatus.OK).body(token);
     }
 }
