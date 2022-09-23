@@ -2,6 +2,7 @@ package com.example.techblogapi.exception.handler;
 
 import com.example.techblogapi.exception.ErrorBody;
 import com.example.techblogapi.exception.RestExceptionHandler;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Order(1)
 @Component
 public class ConstraintViolationExceptionHandler extends ResponseEntityExceptionHandler implements
         RestExceptionHandler<ConstraintViolationException> {

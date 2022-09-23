@@ -1,7 +1,11 @@
 package com.example.techblogapi.service;
 
 
-import com.example.techblogapi.Utils.CheckAuthorValidity;
+import com.example.techblogapi.Utils.IsValidUser;
+import com.example.techblogapi.dto.StoryDto;
+import com.example.techblogapi.dto.UserDto;
+import com.example.techblogapi.dto.UserDtoConverter;
+import com.example.techblogapi.entity.Storys;
 import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.exception.AccessDeniedException;
 import com.example.techblogapi.exception.EntityNotFoundException;
@@ -20,34 +24,42 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private CheckAuthorValidity checkAuth;
+    private IsValidUser checkAuth;
 
+    @Autowired
+    private UserDtoConverter userDtoConverter;
 
-    public List<Users> getAllUser() {
+    public List<UserDto> getAllUser() {
 
-        return userRepository.findAll();
+        List<Users>allStudent=userRepository.findAll();
+        return allStudent.stream().map(x->userDtoConverter.getDetails(x)).toList();
     }
 
-    public Users getSingleUser(int id) {
+    public UserDto getSingleUser(int id) {
 
         Optional<Users> checkUser=userRepository.findById(id);
-        if(checkUser.isPresent()) return checkUser.get();
+        if(checkUser.isPresent()) {
+            UserDto userDto=userDtoConverter.getDetails(checkUser.get());
+            return userDto;
+        }
         throw new EntityNotFoundException(Users.class,"id",String.valueOf(id));
 
     }
 
-    public Users updateUser(int id, Users users) {
+    public UserDto updateUser(int id, Users users) {
 
         Optional<Users> newUser=userRepository.findById(id);
         if(newUser.isEmpty())  throw new EntityNotFoundException(Users.class,"id",String.valueOf(id));
 
-        if(checkAuth.Check(newUser.get())) {
+        if(checkAuth.isValid(newUser.get())) {
 
             newUser.get().setEmail(users.getEmail());
             newUser.get().setPassword(users.getPassword());
             newUser.get().setName(users.getName());
             newUser.get().setPhone(users.getPhone());
-            return userRepository.save(newUser.get());
+            userRepository.save(newUser.get());
+            UserDto userDto=userDtoConverter.getDetails(newUser.get());
+            return userDto;
         }
         throw new AccessDeniedException("Unauthorized user");
 
@@ -57,7 +69,7 @@ public class UserService {
 
         Optional<Users> newUser=userRepository.findById(id);
         if(newUser.isEmpty())  throw new EntityNotFoundException(Users.class,"id",String.valueOf(id));
-        if(checkAuth.Check(newUser.get())) {
+        if(checkAuth.isValid(newUser.get())) {
             userRepository.deleteById(id);
             return;
         }

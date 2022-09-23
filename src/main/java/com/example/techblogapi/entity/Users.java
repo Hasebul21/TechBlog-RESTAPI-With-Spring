@@ -4,6 +4,7 @@ package com.example.techblogapi.entity;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Users {
@@ -89,20 +90,37 @@ public class Users {
         return CreatedDate;
     }
     public String getName() {
+
         return name;
     }
 
     public void setName(String name) {
+
         this.name = name;
     }
 
     public String getPhone() {
+
         return phone;
     }
 
     public void setPhone(String phone) {
+
         this.phone = phone;
     }
 
+    @Override
+    public int hashCode() {
+        int hash=7;
+        return id*hash + email.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        Users other = (Users) obj;
+        if (other.id == this.id&& Objects.equals(other.email, this.email)) return true;
+        return false;
+    }
 
 }

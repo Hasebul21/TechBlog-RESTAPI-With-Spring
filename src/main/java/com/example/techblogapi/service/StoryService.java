@@ -1,20 +1,19 @@
 package com.example.techblogapi.service;
 
+import com.example.techblogapi.Utils.IsValidStory;
 import com.example.techblogapi.dto.StoryDto;
+import com.example.techblogapi.dto.StoryDtoConverter;
 import com.example.techblogapi.entity.Storys;
 import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.exception.AccessDeniedException;
 import com.example.techblogapi.exception.EntityNotFoundException;
 import com.example.techblogapi.repository.StoryRepository;
 import com.example.techblogapi.repository.UserRepository;
-import com.example.techblogapi.security.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class StoryService {
@@ -26,13 +25,17 @@ public class StoryService {
     private UserRepository userRepository;
 
     @Autowired
-    private IAuthenticationFacade authenticationFacade;
+    private IsValidStory checkAuth;
+
+    @Autowired
+    private StoryDtoConverter storyDtoConverter;
+
 
 
     public Iterable<StoryDto> getAllStory() {
 
         List<Storys>allStudent=storyRepository.findAll();
-        List<StoryDto>allStudentDto= allStudent.stream().map(x->getDetails(x)).toList();
+        List<StoryDto>allStudentDto= allStudent.stream().map(x->storyDtoConverter.getDetails(x)).toList();
         return allStudentDto;
     }
 
@@ -40,20 +43,18 @@ public class StoryService {
 
         Optional<Storys> checkStory=storyRepository.findById(id);
         if(checkStory.isEmpty()) throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
-        StoryDto storyDto=getDetails(checkStory.get());
+        StoryDto storyDto=storyDtoConverter.getDetails(checkStory.get());
         return storyDto;
 
     }
 
     public StoryDto postStory(Storys story)  {
 
-        Authentication authentication = authenticationFacade.getAuthentication();
-        if(!authentication.isAuthenticated())  throw new AccessDeniedException(authentication.getName()+" is not Authenticated");
-        String userEmail= authentication.getName();
+        String userEmail= checkAuth.getAuthName();
         Optional<Users> currentUser=userRepository.findByEmail(userEmail);
         story.setAuthorid(currentUser.get());
         storyRepository.save(story);
-        StoryDto storyDto=getDetails(story);
+        StoryDto storyDto=storyDtoConverter.getDetails(story);
         return storyDto;
     }
 
@@ -61,16 +62,16 @@ public class StoryService {
 
         Optional<Storys> newStory=storyRepository.findById(id);
         if(newStory.isEmpty())  throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
-        if(checkAuth(newStory)){
+        if(checkAuth.isValid(newStory)){
 
             Storys checkStory=newStory.get();
             checkStory.setTitle(story.getTitle());
             checkStory.setDescription(story.getDescription());
             storyRepository.save(checkStory);
-            StoryDto storyDto=getDetails(checkStory);
+            StoryDto storyDto=storyDtoConverter.getDetails(checkStory);
             return storyDto;
         }
-        throw new AccessDeniedException(authenticationFacade.getAuthentication().getName()+" is an Unauthorized user");
+        throw new AccessDeniedException("Unauthorized user");
 
     }
 
@@ -78,32 +79,11 @@ public class StoryService {
 
         Optional<Storys> newStory=storyRepository.findById(id);
         if(newStory.isEmpty()) throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
-        if(checkAuth(newStory)) {
+        if(checkAuth.isValid(newStory)) {
 
             storyRepository.deleteById(id);
             return;
         }
-        throw new AccessDeniedException(authenticationFacade.getAuthentication().getName()+" is an Unauthorized user");
-    }
-
-    public boolean checkAuth(Optional<Storys> newStory){
-
-        Authentication authentication = authenticationFacade.getAuthentication();
-        if(!authentication.isAuthenticated()) return false;
-        String CurrentUserEmail= authentication.getName();
-        Users authorDetails=newStory.get().getAuthorid();
-        String authEmail=authorDetails.getEmail();
-        return CurrentUserEmail.equals(authEmail);
-    }
-
-    public StoryDto getDetails(Storys story){
-
-        StoryDto storyDto1=new StoryDto();
-        storyDto1.setId(story.getId());
-        storyDto1.setTitle(story.getTitle());
-        storyDto1.setDescription(story.getDescription());
-        storyDto1.setAuthor(story.getAuthorid().getEmail());
-        storyDto1.setCreatedDate(story.getCreatedDate());
-        return storyDto1;
+        throw new AccessDeniedException("Unauthorized user");
     }
 }
