@@ -10,6 +10,18 @@ public class StoryDto {
     private String description;
     private Date CreatedDate;
 
+    public StoryDto() {
+
+    }
+
+    public StoryDto(int id, String author, String title, String description) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.description = description;
+    }
+
+
     public int getId() {
 
         return id;

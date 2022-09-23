@@ -1,6 +1,7 @@
 package com.example.techblogapi.controller;
 
 
+import com.example.techblogapi.dto.UserDto;
 import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class UserController {
 
 
     @GetMapping("/")
-     public ResponseEntity<List<Users>> getAllUser() {
+     public ResponseEntity<List<UserDto>> getAllUser() {
 
           return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUser());
      }
@@ -29,14 +30,14 @@ public class UserController {
      @GetMapping("/{id}")
      public ResponseEntity<?> getSingleUser(@PathVariable int id) {
 
-          Users newUsers =userService.getSingleUser(id);
+          UserDto newUsers =userService.getSingleUser(id);
           return ResponseEntity.status(HttpStatus.OK).body(newUsers);
      }
 
      @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
      public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody Users users) {
 
-        Users newUsers = userService.updateUser(id, users);
+        UserDto newUsers = userService.updateUser(id, users);
         return new ResponseEntity<>(newUsers, HttpStatus.OK);
      }
 

@@ -7,13 +7,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CheckAuthorValidity {
+public class IsValidUser {
 
 
     @Autowired
     private IAuthenticationFacade authenticationFacade;
 
-    public boolean Check(Users newUser){
+
+    public boolean isValid(Users newUser){
 
         Authentication authentication = authenticationFacade.getAuthentication();
         if(!authentication.isAuthenticated()) return false;

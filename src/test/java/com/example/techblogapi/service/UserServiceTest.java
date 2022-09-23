@@ -1,6 +1,8 @@
 package com.example.techblogapi.service;
 
-import com.example.techblogapi.Utils.CheckAuthorValidity;
+import com.example.techblogapi.Utils.IsValidUser;
+import com.example.techblogapi.dto.UserDto;
+import com.example.techblogapi.dto.UserDtoConverter;
 import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.exception.AccessDeniedException;
 import com.example.techblogapi.exception.EntityNotFoundException;
@@ -25,17 +27,33 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @MockBean
-    private CheckAuthorValidity checkAuthorValidity;
+    private IsValidUser isValidUser;
 
+    @MockBean
+    private UserDtoConverter userDtoConverter;
+
+
+    @Test
+    @DisplayName("Test Find All User Success")
+    void getAllUser(){
+
+        Users userOne=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
+        Users userTwo=new Users(1,"sakib@gmail.com","abcde","Sakib","01789533586");
+        when(userRepository.findAll()).thenReturn(Arrays.asList(userOne,userTwo));
+        List<UserDto>allUser=userService.getAllUser();
+        Assertions.assertEquals(2,allUser.size(),"Expected 2 User");
+    }
 
     @Test
     @DisplayName("Test Find Single User Sucesss")
     void getSingleUserSuccess(){
 
+        UserDto mockUserDto=new UserDto(1,"haseb@gmail.com","Haseb","01789533586");
         Users mockUser=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
         when(userRepository.findById(1)).thenReturn(Optional.of(mockUser));
-        Users expectedUser=userService.getSingleUser(1);
-        Assertions.assertSame(expectedUser,mockUser,"User should be same");
+        when(userDtoConverter.getDetails(mockUser)).thenReturn(mockUserDto);
+        UserDto expectedUser=userService.getSingleUser(1);
+        Assertions.assertSame(expectedUser,mockUserDto,"User should be same");
 
     }
 
@@ -49,16 +67,6 @@ public class UserServiceTest {
 
     }
 
-    @Test
-    @DisplayName("Test Find All User Success")
-    void getAllUser(){
-
-        Users userOne=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
-        Users userTwo=new Users(1,"sakib@gmail.com","abcde","Sakib","01789533586");
-        when(userRepository.findAll()).thenReturn(Arrays.asList(userOne,userTwo));
-        List<Users>allUser=userService.getAllUser();
-        Assertions.assertEquals(2,allUser.size(),"Expected 2 User");
-    }
 
     @Test
     @DisplayName("Update a single User Success")
@@ -66,11 +74,13 @@ public class UserServiceTest {
 
         Users userOne=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
         Users userTwo=new Users(1,"sakib@gmail.com","abcde","Sakib","01789533586");
-        when(userRepository.findById(1)).thenReturn(Optional.of(userOne));
-        when(checkAuthorValidity.Check(userOne)).thenReturn(true);
+        UserDto mockUserDto=new UserDto(1,"sakib@gmail.com","Sakib","01789533586");
+        when(userRepository.findById(1)).thenReturn(Optional.of(userTwo));
+        when(isValidUser.isValid(userTwo)).thenReturn(true);
         when(userRepository.save(userOne)).thenReturn(userTwo);
-        Users expectedUser=userService.updateUser(1,userTwo);
-        Assertions.assertSame(expectedUser,userTwo,"User should be updated");
+        when(userDtoConverter.getDetails(userTwo)).thenReturn(mockUserDto);
+        UserDto expectedUser=userService.updateUser(1,userOne);
+        Assertions.assertSame(expectedUser,mockUserDto,"User should be same and updated");
     }
     @Test
     @DisplayName("Update a single User Failed")
@@ -79,7 +89,7 @@ public class UserServiceTest {
         Users userOne=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
         Users userTwo=new Users(1,"sakib@gmail.com","abcde","Sakib","01789533586");
         when(userRepository.findById(1)).thenReturn(Optional.of(userOne));
-        when(checkAuthorValidity.Check(userOne)).thenReturn(false);
+        when(isValidUser.isValid(userOne)).thenReturn(false);
         Assertions.assertThrows(AccessDeniedException.class,()->userService.updateUser(1,userTwo),"Access should be Denied");
     }
 
@@ -100,7 +110,7 @@ public class UserServiceTest {
 
         Users userOne=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
         when(userRepository.findById(1)).thenReturn(Optional.of(userOne));
-        when(checkAuthorValidity.Check(userOne)).thenReturn(false);
+        when(isValidUser.isValid(userOne)).thenReturn(false);
         Assertions.assertThrows(AccessDeniedException.class,()->userService.deleteUser(1),"Access should be Denied");
 
     }

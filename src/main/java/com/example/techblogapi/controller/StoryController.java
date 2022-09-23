@@ -5,7 +5,9 @@ import com.example.techblogapi.dto.StoryDto;
 import com.example.techblogapi.entity.Storys;
 import com.example.techblogapi.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +21,6 @@ public class StoryController {
 
     @GetMapping("/")
     public ResponseEntity<Iterable<StoryDto>> getAllStory() {
-
         return ResponseEntity.status(HttpStatus.OK).body(storyService.getAllStory());
     }
 
@@ -30,11 +31,12 @@ public class StoryController {
         return ResponseEntity.status(HttpStatus.OK).body(newStory);
     }
 
-    @PostMapping("/")
+    @PostMapping(value="/" , produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE} )
     public ResponseEntity<?> postStory(@RequestBody Storys storys) {
 
         StoryDto newStory =storyService.postStory(storys);
-        return ResponseEntity.status(HttpStatus.OK).body(newStory);
+        //return ResponseEntity.status(HttpStatus.CREATED).body(newStory);
+        return new ResponseEntity<>(newStory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -49,6 +51,6 @@ public class StoryController {
     public ResponseEntity<?> deleteStory(@PathVariable int id) {
 
         storyService.deleteStory(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
