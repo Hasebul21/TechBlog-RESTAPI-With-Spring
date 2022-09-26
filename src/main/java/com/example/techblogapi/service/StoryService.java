@@ -32,19 +32,17 @@ public class StoryService {
 
 
 
-    public Iterable<StoryDto> getAllStory() {
+    public List<StoryDto> getAllStory() {
 
         List<Storys>allStudent=storyRepository.findAll();
-        List<StoryDto>allStudentDto= allStudent.stream().map(x->storyDtoConverter.getDetails(x)).toList();
-        return allStudentDto;
+        return allStudent.stream().map(x->storyDtoConverter.getDetails(x)).toList();
     }
 
     public StoryDto getSingleStory(int id) {
 
         Optional<Storys> checkStory=storyRepository.findById(id);
         if(checkStory.isEmpty()) throw new EntityNotFoundException(Storys.class,"id",String.valueOf(id));
-        StoryDto storyDto=storyDtoConverter.getDetails(checkStory.get());
-        return storyDto;
+        return storyDtoConverter.getDetails(checkStory.get());
 
     }
 
@@ -54,8 +52,7 @@ public class StoryService {
         Optional<Users> currentUser=userRepository.findByEmail(userEmail);
         story.setAuthorid(currentUser.get());
         storyRepository.save(story);
-        StoryDto storyDto=storyDtoConverter.getDetails(story);
-        return storyDto;
+        return storyDtoConverter.getDetails(story);
     }
 
     public StoryDto updateStory(int id, Storys story) {
@@ -68,8 +65,7 @@ public class StoryService {
             checkStory.setTitle(story.getTitle());
             checkStory.setDescription(story.getDescription());
             storyRepository.save(checkStory);
-            StoryDto storyDto=storyDtoConverter.getDetails(checkStory);
-            return storyDto;
+            return storyDtoConverter.getDetails(checkStory);
         }
         throw new AccessDeniedException("Unauthorized user");
 

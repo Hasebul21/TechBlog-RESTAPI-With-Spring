@@ -4,6 +4,8 @@ import com.example.techblogapi.Utils.PasswordValidator;
 import com.example.techblogapi.dto.UserDto;
 import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.exception.AccessDeniedException;
+import com.example.techblogapi.exception.DuplicateEmailException;
+import com.example.techblogapi.exception.EntityNotFoundException;
 import com.example.techblogapi.exception.InvalidPasswordException;
 import com.example.techblogapi.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -56,6 +58,15 @@ public class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Test Signup for a single user Failed")
+    void SignUp_Failed(){
+
+        Users userOne=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
+        when(mockUserRepository.findByEmail("haseb@gmail.com")).thenReturn(Optional.of(userOne));
+        Assertions.assertThrows(DuplicateEmailException.class,()-> authService.signUp(userOne),"This should throw exception");
+    }
+
+    @Test
     @DisplayName("Test SignIn for a single user Success")
     void SignInSuccess(){
 
@@ -74,5 +85,15 @@ public class AuthServiceTest {
         when(mockUserRepository.findByEmail("haseb@gmail.com")).thenReturn(Optional.of(userOne));
         when(mockpasswordEncoder.matches("12345","12345")).thenReturn(false);
         Assertions.assertThrows(AccessDeniedException.class,()->authService.signIn(userOne),"This should throw exception");
+    }
+
+    @Test
+    @DisplayName("Test SignIn for a single user Failed")
+    void SignIn_Failed(){
+
+        Users userOne=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
+        when(mockUserRepository.findByEmail("haseb@gmail.com")).thenReturn(Optional.empty());
+        //when(mockpasswordEncoder.matches("12345","12345")).thenReturn(false);
+        Assertions.assertThrows(EntityNotFoundException.class,()->authService.signIn(userOne),"This should throw exception");
     }
 }
