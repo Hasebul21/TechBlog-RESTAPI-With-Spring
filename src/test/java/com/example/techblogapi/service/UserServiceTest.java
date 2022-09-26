@@ -6,6 +6,7 @@ import com.example.techblogapi.dto.UserDtoConverter;
 import com.example.techblogapi.entity.Users;
 import com.example.techblogapi.exception.AccessDeniedException;
 import com.example.techblogapi.exception.EntityNotFoundException;
+import com.example.techblogapi.exception.handler.GlobalExceptionHandler;
 import com.example.techblogapi.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "${v1API}/stories")
 public class StoryController {
@@ -20,7 +22,7 @@ public class StoryController {
 
 
     @GetMapping("/")
-    public ResponseEntity<Iterable<StoryDto>> getAllStory() {
+    public ResponseEntity<List<StoryDto>> getAllStory() {
         return ResponseEntity.status(HttpStatus.OK).body(storyService.getAllStory());
     }
 

@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -39,6 +41,17 @@ public class StoryServiceTest {
     private IsValidStory checkAuth;
 
 
+    @Test
+    @DisplayName("Test to get all Story")
+    void getAllStory(){
+
+        Users mockUser=new Users(1,"haseb@gmail.com","12345","Haseb","01789533586");
+        Storys mockStory1=new Storys(1, mockUser,"Spring boot","Spring boot is hard.Really!!!!");
+        Storys mockStory2=new Storys(1, mockUser,"Spring boot","Spring boot is hard.Really!!!!");
+        when(storyRepository.findAll()).thenReturn(Arrays.asList(mockStory1,mockStory2));
+        List<StoryDto>allStory=storyService.getAllStory();
+        Assertions.assertEquals(2,allStory.size(),"Expected 2 Story");
+    }
 
     @Test
     @DisplayName("Test Find Single Story Success")
