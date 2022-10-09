@@ -12,6 +12,7 @@ import com.example.techblogapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class StoryService {
     public List<StoryDto> getAllStory() {
 
         List<Storys>allStudent=storyRepository.findAll();
+        Collections.reverse(allStudent);
         return allStudent.stream().map(x->storyDtoConverter.getDetails(x)).toList();
     }
 
