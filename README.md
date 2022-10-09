@@ -6,6 +6,7 @@ Technology Used:
 • JavaScript
 • Spring Boot
 • Spring MVC
+• Spring Security
 • React
 • HTML5
 • CSS3
