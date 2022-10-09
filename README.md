@@ -7,6 +7,7 @@ Technology Used:
 • Spring Boot
 • Spring MVC
 • Spring Security
+• Unit Testing using JUnit and Mockito
 • React
 • HTML5
 • CSS3
