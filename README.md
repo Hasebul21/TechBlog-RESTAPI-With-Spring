@@ -3,7 +3,6 @@
 Technology Used:
 ------------------------
 • Java
-• JavaScript
 • Spring Boot
 • Spring MVC
 • Spring Security
@@ -11,7 +10,6 @@ Technology Used:
 • React
 • HTML5
 • CSS3
-• React
 • MySQL
 
 # Description
